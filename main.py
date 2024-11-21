@@ -9,12 +9,8 @@ class Gaussian:
         内部状態の初期化に使う
         '''
         self.dim = dim
-        '''
-        self = オブジェクトを指す。 self.dim は、オブジェクトの dim という変数を指す。
-        上の命令は、 self.dim に dim の値を代入することを表す
-        '''
-        self.mean = np.random.randn(dim) # オブジェクトの mean という変数をランダムに初期化
-        self.cov = np.identity(dim)
+        self.mean = np.random.randn(dim)  # オブジェクトの mean という変数をランダムに初期化
+        self.cov = np.identity(dim)       # 共分散行列を単位行列で初期化
 
     def log_pdf(self, X):
         ''' 確率密度関数の対数を返す
@@ -41,7 +37,10 @@ class Gaussian:
         ----------
         X : numpy.array, shape (sample_size, dim)
         '''
-        pass
+        # 平均の最尤推定量
+        self.mean = np.mean(X, axis=0)
+        # 共分散行列の最尤推定量
+        self.cov = np.cov(X, rowvar=False)
 
     def sample(self, sample_size):
         ''' 現状のパラメタを使って `sample_size` のサイズのサンプルを生成する
@@ -55,4 +54,5 @@ class Gaussian:
         X : numpy.array, shape (sample_size, dim)
             各行は平均 `self.mean`, 分散 `self.cov` の正規分布に従う
         '''
-        pass
+        return np.random.multivariate_normal(self.mean, self.cov, size=sample_size)
+
